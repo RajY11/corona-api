@@ -1,0 +1,13 @@
+
+Note: What i have done in this application can be done better in other ways too, if you find any please write it to "me rajuyasa11@gmail.com", Thanks.
+
+steps:
+-------
+
+step1: setup spring-boot project with required dependencies.
+step2: creted 4 Entities, Repository classes for persistant logic.
+step3: service class for loading data into 3 different tables from 3 .csv files
+step4: created a view on 3 tabels to combine the required data, used that for to return the result data
+step5: developed controller class with only one get request to return the data.
+step6: created basic react application, making call to just developed end point "http://localhost:8080/data"
+step7: used boot-strap for css, rendered the data as table content.

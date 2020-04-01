@@ -1,0 +1,16 @@
+We are going to develop a corona virus tracker application, which can perform follwing operations
+
+
+Note: The data we are displaying in this app is completely from external source. I have no idea/ guarantee about the data correctness. 
+
+In scope:
+1) give the detail report, with number of cases - completed (will write test cases later based on time..... :-) 
+work in progress
+2) show the different with priviours date and % of increse or decrese
+3) If you are intrested in specific countries you can customize the request.
+
+Optional
+4) You can also get subscribed for the alerts with specific data sing java mail api.
+
+
+Springboot, Angular / React ,Bootstrap
