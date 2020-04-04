@@ -1,13 +1,7 @@
 package com.r3tech.springbootcovidapi.service;
 
-import com.r3tech.springbootcovidapi.models.CoronaData;
-import com.r3tech.springbootcovidapi.models.CoronaDetails;
-import com.r3tech.springbootcovidapi.models.DeathData;
-import com.r3tech.springbootcovidapi.models.RecoveryData;
-import com.r3tech.springbootcovidapi.repository.CoronaDetailsRepository;
-import com.r3tech.springbootcovidapi.repository.CoronaRepository;
-import com.r3tech.springbootcovidapi.repository.DeathRepository;
-import com.r3tech.springbootcovidapi.repository.RecoveryRepository;
+import com.r3tech.springbootcovidapi.models.*;
+import com.r3tech.springbootcovidapi.repository.*;
 import org.apache.commons.csv.CSVRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +13,7 @@ import java.io.StringReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import org.apache.commons.csv.CSVFormat;
+
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
@@ -41,15 +36,17 @@ public class CoronaService {
     private RecoveryRepository recoveryRepository;
     private CoronaRepository repository;
     private CoronaDetailsRepository detailsRepository;
+    private SubUserRepository subUserRepository;
 
     public CoronaService(){}
 
     @Autowired
-    public CoronaService(CoronaRepository repository,DeathRepository deathRepository,RecoveryRepository recoveryRepository,CoronaDetailsRepository detailsRepository){
+    public CoronaService(CoronaRepository repository,DeathRepository deathRepository,RecoveryRepository recoveryRepository,CoronaDetailsRepository detailsRepository,SubUserRepository subUserRepository){
         this.repository = repository;
         this.deathRepository = deathRepository;
         this.recoveryRepository = recoveryRepository;
         this.detailsRepository = detailsRepository;
+        this.subUserRepository = subUserRepository;
     }
 
     // can be improved by keeping data loading generic logic into one method., I am focusing on functionality more
@@ -127,5 +124,10 @@ public class CoronaService {
 
     public List<CoronaDetails> getAllData() {
         return detailsRepository.findAll();
+    }
+
+    public SubUser saveSubuser(SubUser subUser) {
+        subUserRepository.save(subUser);
+        return subUser;
     }
 }

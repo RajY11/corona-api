@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @Entity
-@Subselect("select DISTINCT country1,confirmed,death,recovered from country_view order by country1")
+@Subselect("select DISTINCT country1,confirmed,death,recovered from country_view order by confirmed DESC")
 public class CoronaDetails {
     @Id
     private String country1;
@@ -21,4 +21,13 @@ public class CoronaDetails {
     private Integer death;
     private Integer recovered;
 
+    @Override
+    public String toString() {
+        return "CoronaDetails{" +
+                "country1='" + country1 + '\'' +
+                ", confirmed=" + confirmed +
+                ", death=" + death +
+                ", recovered=" + recovered +
+                '}';
+    }
 }
