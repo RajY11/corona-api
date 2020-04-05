@@ -53,6 +53,7 @@ public class CoronaService {
 
     @PostConstruct
     @Scheduled(cron = "* * 1 * * *")
+
     public void loadConfirmData() throws IOException, InterruptedException {
         List<CoronaData> tempData = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
@@ -72,6 +73,7 @@ public class CoronaService {
             tempData.add(cdata);
         }
         this.data = tempData;
+        repository.truncateMyTable(); // clean up the old data, since we are using spring.jpa.hibernate.ddl-auto=update
         repository.saveAll(tempData);
     }
     @PostConstruct
@@ -94,6 +96,7 @@ public class CoronaService {
             tempData.add(cdata);
         }
         this.deathData = tempData;
+        deathRepository.truncateMyTable(); // clean up the old data, since we are using spring.jpa.hibernate.ddl-auto=update
         deathRepository.saveAll(tempData);
 
     }
@@ -118,6 +121,7 @@ public class CoronaService {
             tempData.add(cdata);
         }
         this.recoveryData = tempData;
+        recoveryRepository.truncateMyTable(); // clean up the old data, since we are using spring.jpa.hibernate.ddl-auto=update
         recoveryRepository.saveAll(tempData);
 
     }

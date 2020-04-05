@@ -1,11 +1,13 @@
 package com.r3tech.springbootcovidapi.service;
 
 import com.r3tech.springbootcovidapi.models.CoronaDetails;
+import com.r3tech.springbootcovidapi.models.MailContent;
 import com.r3tech.springbootcovidapi.models.SubUser;
 import com.r3tech.springbootcovidapi.repository.CoronaDetailsRepository;
 import com.r3tech.springbootcovidapi.repository.SubUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Arrays;
@@ -28,9 +30,9 @@ public class MailService {
 
     @PostConstruct
     public void loadSubscribersData(){
-        //listOfSubscribers = subUserRepository.findAll();
+        listOfSubscribers = subUserRepository.findAll();
 
-        listOfSubscribers = Arrays.asList(new SubUser(1,"rajuy@gmail.com",Arrays.asList("India","Canada")),new SubUser(2,"rajuyasa@gmail.com",Arrays.asList("India","US")));
+        //listOfSubscribers = Arrays.asList(new SubUser(1,"rajuy369@gmail.com",Arrays.asList("India","Canada")),new SubUser(2,"rajuyasa11@gmail.com",Arrays.asList("India","US")));
 
         listOfSubscribers.stream().forEach(subUser -> {
             coronaDetails = coronaDetailsRepository.findAllByCountry1In(subUser.getCountries());
@@ -40,14 +42,25 @@ public class MailService {
     }
 
     public void prepareData(String emailId, List<CoronaDetails> coronaDetails){
-        System.out.println("for " + emailId);
+        StringBuilder summary = new StringBuilder();
         coronaDetails.stream().forEach(detail->{
-            System.out.println(detail.toString());
+
+            summary.append(detail.getSummary() + "\n");
+
         });
+
+        MailContent content = new MailContent();
+        content.setEmailId(emailId);
+        content.setContent(summary.toString());
+        content.setSubject("CORONA UPDATE");
+
+        sendData(content);
 
     }
 
-    public void sendData(){
-
+    public void sendData(MailContent content){
+        RestTemplate restTemplate = new RestTemplate();
+        System.out.println("calling api..........................................");
+        String response = restTemplate.postForObject("http://localhost:8082/mail", content, String.class);
     }
 }

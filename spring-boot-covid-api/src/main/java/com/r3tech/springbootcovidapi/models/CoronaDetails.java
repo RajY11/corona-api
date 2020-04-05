@@ -30,4 +30,11 @@ public class CoronaDetails {
                 ", recovered=" + recovered +
                 '}';
     }
+
+    public String getSummary(){
+        return "Country:" + country1 +
+                " \t Confirmed : " + confirmed +
+                "\t Death:" + death +
+                "\t Recovered: " + recovered ;
+    }
 }

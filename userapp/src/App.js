@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axious from 'axios';
 import './App.css';
 
 
@@ -8,8 +9,10 @@ class App extends Component{
     super(props);
     this.state = {
       data : [],
+      data2 :[],
       email : "",
-      countries :""
+      countries :"",
+      selectedCountries:[]
     };
     this.handleEmailChange = this.handleEmailChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -21,7 +24,8 @@ class App extends Component{
         .then(res => res.json())
         .then(json => {
             this.setState({
-              data : json
+              data : json,
+              data2: json
             })
         });
   }
@@ -31,17 +35,33 @@ class App extends Component{
   }
 
   handleSubmit(event) {
-    alert(this.state.email + '' + this.state.countries);
-    event.preventDefault();
+    
+    if(this.state.email != null && this.state.countries!=null){
+      axious.post("http://localhost:8080/subscribe" , {"emailId" : this.state.email , "countries" : [this.state.countries]})
+              .then(response => {
+                console.log(response );
+                alert("Success, you can add more countires if you want");
+              })
+              .catch(error=>{
+                alert(error);
+                console.log(error);
+              })
+    }
+
   }
 
   handleCountryChange(e) {
-    this.setState({countries:e.target.value})
+    var listOfCountries = this.state.selectedCountries;
+    listOfCountries.push(e.target.value);
+    this.setState({selectedCountries:listOfCountries});
+    this.setState({countries:e.target.value});
   }
 
   render(){
 
     var {data} = this.state;
+    var {data2} = this.state;
+    var {selectedCountries} = this.state;
     var count =0;
     let totalCases=0;
     let totalDeaths=0;
@@ -67,15 +87,28 @@ class App extends Component{
           <span className="navbar-brand mb-0 h1">Corona Data</span><br/>
           <span className="navbar-brand mb-0 h1">Total cases : {formatter.format(totalCases)} | Total Deaths : {formatter.format(totalDeaths)} with {deathPercenteage} %|Total Recovered : {formatter.format(totalRecovered)} with {recoverPercenteage} %</span>
           <span className="navbar-brand mb-0 h1">You can subscribe with your email to get alerts of speicific country on your choice</span>
-          <form className="input-group">
+          <form className="input-group" >
           <span className="navbar-brand mb-0 h1">
               <span className = "font-weight-normal" >Enter email :</span><input type="email" name = "email" className ="btn btn-light" placeholder="Email" onChange={this.handleEmailChange}/>
-              <select name="country" className ="btn btn-light" placeholder="country" onChange ={this.handleCountryChange}>
+              
+              <select name="country" className ="btn btn-light" placeholder="country" 
+              onChange ={(e) =>{
+                this.setState({countries : e.target.value});
+                if(e.target.value==="ALL"){  this.setState({data2 : data})}
+                else{
+                this.setState({data2 : data.filter(d=>d.country1===e.target.value)})}
+                var listOfCountries = this.state.selectedCountries;
+                listOfCountries.push(e.target.value);
+                this.setState({selectedCountries:listOfCountries});
+              }}>
+                                <option key="ALL" value="ALL">All</option> 
                 {data.map((d) => <option key={d.country1} value={d.country1}>{d.country1}</option>)}
               </select>
               <input type="submit" className ="btn btn-dark" value = "Subscribe" onClick={this.handleSubmit}/> 
+             
           </span> 
           </form>
+         
         </nav>
         
         
@@ -95,7 +128,7 @@ class App extends Component{
             </tr>
           </thead>
           <tbody>
-          {data.map(d=>(
+          {data2.map(d=>(
             <tr key={d.country1}>
               
           <td>{count+=1}</td>
